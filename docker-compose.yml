@@ -3,6 +3,7 @@ services:
   postgres:
     image: postgres:14
     environment:
+      POSTGRES_DB: metadata
       POSTGRES_PASSWORD: postgres
       POSTGRES_HOST_AUTH_METHOD: md5
   pgcat:
@@ -10,6 +11,8 @@ services:
     command:
       - "pgcat"
       - "/etc/pgcat/pgcat.toml"
+    depends_on:
+      - postgres
     volumes:
       - "${PWD}/examples/docker/pgcat.toml:/etc/pgcat/pgcat.toml"
     ports:

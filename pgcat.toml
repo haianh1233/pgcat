@@ -133,7 +133,7 @@ result = [
 # the pool_name is what clients use as database name when connecting.
 # For a pool named `sharded_db`, clients access that pool using connection string like
 # `postgres://sharding_user:sharding_user@pgcat_host:pgcat_port/sharded_db`
-[pools.sharded_db]
+[pools.conduktor_sql]
 # Pool mode (see PgBouncer docs for more).
 # `session` one server connection per connected client
 # `transaction` one server connection per client transaction
@@ -222,18 +222,18 @@ connect_timeout = 3000
 
 # Plugins can be configured on a pool-per-pool basis. This overrides the global plugins setting,
 # so all plugins have to be configured here again.
-[pool.sharded_db.plugins]
+[pool.conduktor_sql.plugins]
 
-[pools.sharded_db.plugins.prewarmer]
+[pools.conduktor_sql.plugins.prewarmer]
 enabled = true
 queries = [
   "SELECT pg_prewarm('pgbench_accounts')",
 ]
 
-[pools.sharded_db.plugins.query_logger]
+[pools.conduktor_sql.plugins.query_logger]
 enabled = false
 
-[pools.sharded_db.plugins.table_access]
+[pools.conduktor_sql.plugins.table_access]
 enabled = false
 tables = [
   "pg_user",
@@ -241,10 +241,10 @@ tables = [
   "pg_database",
 ]
 
-[pools.sharded_db.plugins.intercept]
+[pools.conduktor_sql.plugins.intercept]
 enabled = true
 
-[pools.sharded_db.plugins.intercept.queries.0]
+[pools.conduktor_sql.plugins.intercept.queries.0]
 
 query = "select current_database() as a, current_schemas(false) as b"
 schema = [
@@ -255,7 +255,7 @@ result = [
   ["${DATABASE}", "{public}"],
 ]
 
-[pools.sharded_db.plugins.intercept.queries.1]
+[pools.conduktor_sql.plugins.intercept.queries.1]
 
 query = "select current_database(), current_schema(), current_user"
 schema = [
@@ -269,14 +269,14 @@ result = [
 
 # User configs are structured as pool.<pool_name>.users.<user_index>
 # This section holds the credentials for users that may connect to this cluster
-[pools.sharded_db.users.0]
+[pools.conduktor_sql.users.0]
 # PostgreSQL username used to authenticate the user and connect to the server
 # if `server_username` is not set.
-username = "sharding_user"
+username = "postgres"
 
 # PostgreSQL password used to authenticate the user and connect to the server
 # if `server_password` is not set.
-password = "sharding_user"
+password = "postgres"
 
 pool_mode = "transaction"
 
@@ -296,18 +296,18 @@ pool_size = 9
 # 0 means it is disabled.
 statement_timeout = 0
 
-[pools.sharded_db.users.1]
-username = "other_user"
-password = "other_user"
-pool_size = 21
-statement_timeout = 15000
-connect_timeout = 1000
-idle_timeout = 1000
+#[pools.sharded_db.users.1]
+#username = "other_user"
+#password = "other_user"
+#pool_size = 21
+#statement_timeout = 15000
+#connect_timeout = 1000
+#idle_timeout = 1000
 
 # Shard configs are structured as pool.<pool_name>.shards.<shard_id>
 # Each shard config contains a list of servers that make up the shard
 # and the database name to use.
-[pools.sharded_db.shards.0]
+[pools.conduktor_sql.shards.0]
 # Array of servers in the shard, each server entry is an array of `[host, port, role]`
 servers = [["127.0.0.1", 5432, "primary"], ["localhost", 5432, "replica"]]
 
@@ -316,35 +316,12 @@ servers = [["127.0.0.1", 5432, "primary"], ["localhost", 5432, "replica"]]
 # mirrors = [["1.2.3.4", 5432, 0], ["1.2.3.4", 5432, 1]]
 
 # Database name (e.g. "postgres")
-database = "shard0"
+database = "metadata"
 
-[pools.sharded_db.shards.1]
-servers = [["127.0.0.1", 5432, "primary"], ["localhost", 5432, "replica"]]
-database = "shard1"
+[pools.conduktor_sql.shards.1]
+servers = [["127.0.0.1", 5433, "primary"], ["localhost", 5433, "replica"]]
+database = "data_1"
 
-[pools.sharded_db.shards.2]
-servers = [["127.0.0.1", 5432, "primary" ], ["localhost", 5432, "replica" ]]
-database = "shard2"
-
-
-[pools.simple_db]
-pool_mode = "session"
-default_role = "primary"
-query_parser_enabled = true
-primary_reads_enabled = true
-sharding_function = "pg_bigint_hash"
-
-[pools.simple_db.users.0]
-username = "simple_user"
-password = "simple_user"
-pool_size = 5
-min_pool_size = 3
-server_lifetime = 60000
-statement_timeout = 0
-
-[pools.simple_db.shards.0]
-servers = [
-    [ "127.0.0.1", 5432, "primary" ],
-    [ "localhost", 5432, "replica" ]
-]
-database = "some_db"
+#[pools.sharded_db.shards.2]
+#servers = [["127.0.0.1", 5432, "primary" ], ["localhost", 5434, "replica" ]]
+#database = "data_2"

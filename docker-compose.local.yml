@@ -1,0 +1,31 @@
+version: "3"
+services:
+  postgres-0:
+    image: postgres:14
+    container_name: postgres-0
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: metadata
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST_AUTH_METHOD: md5
+
+  postgres-1:
+    image: postgres:14
+    container_name: postgres-1
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: data_1
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST_AUTH_METHOD: md5
+
+  postgres-2:
+    image: postgres:14
+    container_name: postgres-2
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_DB: data_2
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST_AUTH_METHOD: md5
