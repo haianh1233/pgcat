@@ -224,11 +224,11 @@ connect_timeout = 3000
 # so all plugins have to be configured here again.
 [pool.conduktor_sql.plugins]
 
-[pools.conduktor_sql.plugins.prewarmer]
-enabled = true
-queries = [
-  "SELECT pg_prewarm('pgbench_accounts')",
-]
+#[pools.conduktor_sql.plugins.prewarmer]
+#enabled = true
+#queries = [
+#  "SELECT pg_prewarm('pgbench_accounts')",
+#]
 
 [pools.conduktor_sql.plugins.query_logger]
 enabled = false
@@ -272,11 +272,11 @@ result = [
 [pools.conduktor_sql.users.0]
 # PostgreSQL username used to authenticate the user and connect to the server
 # if `server_username` is not set.
-username = "postgres"
+username = "admin"
 
 # PostgreSQL password used to authenticate the user and connect to the server
 # if `server_password` is not set.
-password = "postgres"
+password = "admin"
 
 pool_mode = "transaction"
 
@@ -319,8 +319,8 @@ servers = [["127.0.0.1", 5432, "primary"], ["localhost", 5432, "replica"]]
 database = "metadata"
 
 [pools.conduktor_sql.shards.1]
-servers = [["127.0.0.1", 5433, "primary"], ["localhost", 5433, "replica"]]
-database = "data_1"
+servers = [["127.0.0.1", 9005, "primary"], ["localhost", 9005, "replica"]]
+database = "default"
 
 #[pools.sharded_db.shards.2]
 #servers = [["127.0.0.1", 5432, "primary" ], ["localhost", 5434, "replica" ]]

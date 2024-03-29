@@ -297,6 +297,23 @@ where
     write_all(stream, message).await
 }
 
+pub async fn plain_password<S>(
+    stream: &mut S,
+    password: &str,
+) -> Result<(), Error>
+    where
+        S: tokio::io::AsyncWrite + std::marker::Unpin,
+{
+    let mut message = BytesMut::with_capacity(password.len() + 5 + 1);
+
+    message.put_u8(b'p');
+    message.put_i32(password.len() as i32 + 4);
+    message.put_slice(password.as_bytes());
+    message.put_u8(0); // null terminator
+
+    write_all(stream, message).await
+}
+
 /// Implements a response to our custom `SET SHARDING KEY`
 /// and `SET SERVER ROLE` commands.
 /// This tells the client we're ready for the next query.

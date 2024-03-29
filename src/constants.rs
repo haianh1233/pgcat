@@ -14,6 +14,9 @@ pub const CANCEL_REQUEST_CODE: i32 = 80877102;
 // AuthenticationMD5Password
 pub const MD5_ENCRYPTED_PASSWORD: i32 = 5;
 
+// PlaintextPassword
+pub const AUTHENTICATION_CLEARTEXT: i32 = 3;
+
 // SASL
 pub const SASL: i32 = 10;
 pub const SASL_CONTINUE: i32 = 11;

@@ -518,6 +518,20 @@ impl Server {
                     trace!("Auth: {}", auth_code);
 
                     match auth_code {
+                        AUTHENTICATION_CLEARTEXT => {
+                            match password {
+                                Some(password) => {
+                                    plain_password(&mut stream, password).await?
+                                }
+                                None => {
+                                    return Err(Error::ServerAuthError(
+                                        "Auth passthrough (auth_query) failed and no user password is set in cleartext".into(),
+                                        server_identifier
+                                    ))
+                                }
+                            }
+                        }
+                        
                         MD5_ENCRYPTED_PASSWORD => {
                             // The salt is 4 bytes.
                             // See: https://www.postgresql.org/docs/12/protocol-message-formats.html
