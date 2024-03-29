@@ -200,6 +200,17 @@ impl QueryRouter {
 
         let query = message_cursor.read_string().unwrap();
 
+        // TODO temp solution
+        let metadata_pattern = r"(?is).*pg_.*|.*current_schema.*|.*show.*|.*information_schema.*";
+        let regex = Regex::new(metadata_pattern).unwrap();
+
+        if regex.is_match(&query) {
+            self.set_shard(Some(0));
+        }else {
+            self.set_shard(Some(1));
+        }
+
+
         let regex_set = match CUSTOM_SQL_REGEX_SET.get() {
             Some(regex_set) => regex_set,
             None => return None,
